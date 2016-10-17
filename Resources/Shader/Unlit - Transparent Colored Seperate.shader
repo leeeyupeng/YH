@@ -3,7 +3,7 @@ Shader "Unlit/Transparent Colored Seperate"
 	Properties
 	{
 		_MainTex ("Base (RGB)", 2D) = "black" {}
-		_AlpahTex("AlphaTex", 2D) = "white" {}
+		_AlphaTex("AlphaTex", 2D) = "white" {}
 	}
 	
 	SubShader
@@ -32,8 +32,9 @@ Shader "Unlit/Transparent Colored Seperate"
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
-			sampler2D _AlpahTex;
+			sampler2D _AlphaTex;
 			float4 _MainTex_ST;
+			float4 _AlphaTex_ST;
 	
 			struct appdata_t
 			{
@@ -61,22 +62,9 @@ Shader "Unlit/Transparent Colored Seperate"
 				
 			fixed4 frag (v2f IN) : SV_Target
 			{
-				//change by pzg 20160909 from the network
-				fixed4 col;
-				if (IN.color.r == 0)
-				{
-					col = tex2D(_MainTex, IN.texcoord);
-					float grey = dot(col.rgb, float3(0.299, 0.587, 0.114));
-					col.rgb = float3(grey, grey, grey);
-
-					col.a = tex2D(_AlpahTex, IN.texcoord) * IN.color.a;
-				}
-				else
-				{
-					col = tex2D(_MainTex, IN.texcoord) * IN.color;
-
-					col.a = tex2D(_AlpahTex, IN.texcoord) * IN.color.a;
-				}
+				fixed4 col = tex2D(_MainTex, IN.texcoord) * IN.color;
+				fixed4 colAlpha = tex2D(_AlphaTex, IN.texcoord) * IN.color;
+				col.a = colAlpha.r;
 				return col;
 			}
 			ENDCG

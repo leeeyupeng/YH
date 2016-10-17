@@ -44,6 +44,20 @@ public class UITextureForAndroid
             UITextureForETC1.SeperateRGBAandlphaChannel(AssetDatabase.GetAssetPath(texture));
         }
     }
+
+    [MenuItem("KOL/UI/Seperate Alpha Only To ETC For Texture Select")]
+    public static void SeperateAlphaToETC_ForTextureSelect()
+    {
+        foreach (Object o in Selection.GetFiltered(typeof(Texture2D), SelectionMode.DeepAssets))
+        {
+            if (!(o is Texture2D)) continue;
+            //if (o.name.Contains("@")) continue;
+            //if (!AssetDatabase.GetAssetPath(o).Contains(fbxPath)) continue;
+
+            Texture2D texture = (Texture2D)o;
+            ToETC1(AssetDatabase.GetAssetPath(texture));
+        }
+    }
     public static void SeperateAlpha(Material mat)
     {
         Texture2D texture = mat.mainTexture as Texture2D;
@@ -60,7 +74,7 @@ public class UITextureForAndroid
             Texture2D rgbTexture = AssetDatabase.LoadAssetAtPath(texRGBPath, typeof(Texture2D)) as Texture2D;
             mat.SetTexture("_MainTex", rgbTexture);
             Texture2D alphaTexture = AssetDatabase.LoadAssetAtPath(texAlphaPath, typeof(Texture2D)) as Texture2D;
-            mat.SetTexture("_AlpahTex", alphaTexture);
+            mat.SetTexture("_AlphaTex", alphaTexture);
             EditorUtility.SetDirty(mat);
         }
         else if (shaderName == "Unlit/Transparent")
@@ -77,5 +91,44 @@ public class UITextureForAndroid
 
         AssetDatabase.Refresh();
         AssetDatabase.SaveAssets();
+    }
+
+    static void ToETC1(string path)
+    {
+        try
+        {
+            AssetDatabase.ImportAsset(path);
+        }
+        catch
+        {
+            Debug.LogError("Import Texture failed: " + path);
+            return;
+        }
+
+        TextureImporter importer = null;
+        try
+        {
+            importer = (TextureImporter)TextureImporter.GetAtPath(path);
+        }
+        catch
+        {
+            Debug.LogError("Load Texture failed: " + path);
+            return;
+        }
+        if (importer == null)
+        {
+            return;
+        }
+        //importer.maxTextureSize = Mathf.Max(width, height);
+        importer.anisoLevel = 0;
+        importer.isReadable = false;  //increase memory cost if readable is true
+        importer.textureFormat = TextureImporterFormat.AutomaticCompressed;
+        importer.textureType = TextureImporterType.Image;
+        //importer.SetAllowsAlphaSplitting(true);
+        if (path.Contains("/UI/"))
+        {
+            importer.textureType = TextureImporterType.GUI;
+        }
+        AssetDatabase.ImportAsset(path);
     }
 }
