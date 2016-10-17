@@ -8,7 +8,7 @@ using System.Reflection;
 public class UITextureForETC1
 {
 
-    private static string defaultWhiteTexPath_relative = "Assets/Default_Alpha.png";
+    private static string defaultWhiteTexPath_relative = "Assets/YH/Editor/UI/Default_Alpha.png";
     private static Texture2D defaultWhiteTex = null;
 
     //[MenuItem("EffortForETC1/Depart RGB and Alpha Channel")]
@@ -62,6 +62,11 @@ public class UITextureForETC1
 
         Texture2D rgbTex = new Texture2D(sourcetex.width, sourcetex.height, TextureFormat.RGB24, bGenerateMipMap);
         rgbTex.SetPixels(sourcetex.GetPixels());
+        rgbTex.Apply();
+        byte[] bytes = rgbTex.EncodeToPNG();
+        string rgbRelativePath = GetRGBTexPath(_texPath);
+        File.WriteAllBytes(rgbRelativePath, bytes);
+        ReImportAsset(rgbRelativePath, rgbTex.width, rgbTex.height);
 
         Texture2D mipMapTex = new Texture2D(sourcetex.width, sourcetex.height, TextureFormat.RGBA32, true);  //Alpha Channel needed here
         mipMapTex.SetPixels(sourcetex.GetPixels());
@@ -97,17 +102,11 @@ public class UITextureForETC1
 
         alphaTex.SetPixels(colorsAlpha);
 
-        rgbTex.Apply();
         alphaTex.Apply();
 
-        byte[] bytes = rgbTex.EncodeToPNG();
-        string rgbRelativePath = GetRGBTexPath(_texPath);
-        File.WriteAllBytes(rgbRelativePath, bytes);
         byte[] alphabytes = alphaTex.EncodeToPNG();
         string alphaTexRelativePath = GetAlphaTexPath(_texPath);
-        File.WriteAllBytes(alphaTexRelativePath, alphabytes);
-
-        ReImportAsset(rgbRelativePath, rgbTex.width, rgbTex.height);
+        File.WriteAllBytes(alphaTexRelativePath, alphabytes);        
         ReImportAsset(alphaTexRelativePath, alphaTex.width, alphaTex.height);
         Debug.Log("Succeed Departing : " + assetRelativePath);
     }

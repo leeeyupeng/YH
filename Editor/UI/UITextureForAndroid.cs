@@ -27,6 +27,7 @@ public class UITextureForAndroid
             //if (!AssetDatabase.GetAssetPath(o).Contains(fbxPath)) continue;
 
             Material mat = (Material)o;
+            Debug.Log("seperate : " + AssetDatabase.GetAssetPath(mat));
             SeperateAlpha(mat);
         }
     }
@@ -60,6 +61,11 @@ public class UITextureForAndroid
     }
     public static void SeperateAlpha(Material mat)
     {
+        mat.shader = Shader.Find(mat.shader.name.Replace(" Seperate", ""));
+        string texturePath = AssetDatabase.GetAssetPath(mat.GetTexture("_MainTex"));
+        texturePath = texturePath.Replace("_RGB","");
+        mat.SetTexture("_MainTex", AssetDatabase.LoadAssetAtPath(texturePath,typeof(Texture2D)) as Texture2D);
+
         Texture2D texture = mat.mainTexture as Texture2D;
         string texPath = AssetDatabase.GetAssetPath(texture);
         UITextureForETC1.SeperateRGBAandlphaChannel(texPath);
@@ -67,6 +73,7 @@ public class UITextureForAndroid
         string texRGBPath = UITextureForETC1.GetRGBTexPath(texPath);
         string texAlphaPath = UITextureForETC1.GetAlphaTexPath(texPath);
         string shaderName = mat.shader.name;
+
         if(shaderName == "Unlit/Transparent Colored")
         {
             mat.shader = Shader.Find("Unlit/Transparent Colored Seperate");
