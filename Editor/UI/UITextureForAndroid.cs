@@ -17,8 +17,8 @@ using UnityEditor;
 public class UITextureForAndroid
 {
 
-    [MenuItem("KOL/UI/Texture Seperate Alpha Select")]
-    public static void SeperateAlpha_Select()
+    [MenuItem("KOL/UI/Seperate Alpha For Material Select")]
+    public static void SeperateAlpha_ForMaterialSelect()
     {
         foreach (Object o in Selection.GetFiltered(typeof(Material), SelectionMode.DeepAssets))
         {
@@ -28,6 +28,20 @@ public class UITextureForAndroid
 
             Material mat = (Material)o;
             SeperateAlpha(mat);
+        }
+    }
+
+    [MenuItem("KOL/UI/Seperate Alpha For Texture Select")]
+    public static void SeperateAlpha_ForTextureSelect()
+    {
+        foreach (Object o in Selection.GetFiltered(typeof(Texture2D), SelectionMode.DeepAssets))
+        {
+            if (!(o is Texture2D)) continue;
+            //if (o.name.Contains("@")) continue;
+            //if (!AssetDatabase.GetAssetPath(o).Contains(fbxPath)) continue;
+
+            Texture2D texture = (Texture2D)o;
+            UITextureForETC1.SeperateRGBAandlphaChannel(AssetDatabase.GetAssetPath(texture));
         }
     }
     public static void SeperateAlpha(Material mat)
