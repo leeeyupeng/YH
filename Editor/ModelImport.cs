@@ -20,12 +20,12 @@ public class ModelImport : AssetPostprocessor
     {
         if (assetPath.Contains("@"))
         {
-            ModelImporter modelImporter  = assetImporter as ModelImporter;
+            //ModelImporter modelImporter  = assetImporter as ModelImporter;
             //modelImporter.importMaterials = false;
         }
     }
 
-    void OnPostprocessModel()
+    void OnPostprocessModel(GameObject obj)
     {
 
     }

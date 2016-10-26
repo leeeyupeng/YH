@@ -18,7 +18,7 @@ using System.IO;
 using UnityEditor;
 
 public class AvatarEditor{
-    static string fbxPath = "Arts/Charactor/Human";
+    public static string fbxPath = "Arts/Charactor/Human";
     static string outPath = "Resources/Arts/Charactor/Human";
     [MenuItem("KOL/Actor/Human/Avatar/Split All")]
     public static void SplitAll()

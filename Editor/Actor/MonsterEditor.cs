@@ -91,7 +91,7 @@ public class MonsterEditor
             rb.useGravity = true;
             rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             MonsterController mc = prefabInstantiate.AddComponent<MonsterController>();
-            mc.m_monsterID = Path.GetFileNameWithoutExtension(modelPath);
+            mc.m_monsterName = Path.GetFileNameWithoutExtension(modelPath);
             GameObject detect = new GameObject("detect");
             detect.transform.parent = prefabInstantiate.transform;
             detect.transform.localPosition = Vector3.zero;

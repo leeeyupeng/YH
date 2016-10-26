@@ -15,17 +15,49 @@ using System.Collections.Generic;
 
 using UnityEditor;
 
-public class ActorAnimationImport : AssetPostprocessor
+using System.IO;
+
+public class ActorAnimationImport
 {
-    void OnPreprocessAnimation()
+    public static string fbxPath = "Arts/Charactor/Human";
+    [MenuItem("KOL/Actor/Human/Animation Import")]
+    public static void ImportFolder(string folder)
     {
-        ModelImporter modelImporter = assetImporter as ModelImporter;
+        DirectoryInfo di = new DirectoryInfo(folder);
+
+        foreach (FileInfo fi in di.GetFiles())
+        {
+            string path = fi.FullName;
+            path = path.Replace("\\", "/");
+            path = path.Replace(Application.dataPath, "Assets");
+            Object obj = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
+
+            if (!(obj is GameObject)) continue;
+            if (!AssetDatabase.GetAssetPath(obj).Contains(fbxPath)) continue;
+
+            GameObject fbx = (GameObject)obj;
+            ModelImport(fbx);
+        }
+
+        foreach (DirectoryInfo cdi in di.GetDirectories())
+        {
+            ImportFolder(cdi.FullName);
+        }
+    }
+    static void ModelImport(GameObject fbx)
+    {
+        //ModelImporter modelImporter = assetImporter as ModelImporter;
+        string assetPath = AssetDatabase.GetAssetPath(fbx);
+        ModelImporter modelImporter = (ModelImporter)ModelImporter.GetAtPath(assetPath);
 
         List<ModelImporterClipAnimation> animations = new List<ModelImporterClipAnimation>();
-        foreach(ModelImporterClipAnimation animation in  modelImporter.defaultClipAnimations)
+        foreach (ModelImporterClipAnimation animation in modelImporter.defaultClipAnimations)
         {
             Debug.Log(assetPath);
-            if(assetPath.Contains("idle"))
+            if (!assetPath.Contains(AvatarEditor.fbxPath))
+                continue;
+
+            if (assetPath.Contains("idle"))
             {
                 Debug.Log("idle");
                 animation.loop = true;
