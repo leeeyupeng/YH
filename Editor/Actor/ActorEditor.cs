@@ -25,7 +25,7 @@ public class ActorEditor
 
         AnimatorEditor.GenController();
 
-        HumanEditor.GenPrefab();
+        HumanEditor.GenPrefabForBattle();
 
         EquipEditor.Split();
 
