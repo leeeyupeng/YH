@@ -27,9 +27,9 @@ public class ActorEditor
 
         HumanEditor.GenPrefab();
 
-        EquipEditor.Split();
+        EquipEditor.SplitAll();
 
-        WeaponEditor.Split();
+        WeaponEditor.SplitAll();
 
         MonsterEditor.GenMonsterAll();
     }
