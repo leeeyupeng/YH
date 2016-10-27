@@ -132,19 +132,19 @@ public class EquipEditor
             }
 
             //materials
-            //List<Material> materials = EditorHelpers.CollectAll<Material>(curFbxPath + "/Materials");
-            //foreach (Material mat in materials)
-            //{
-            //    string matPath = Path.GetDirectoryName(AssetDatabase.GetAssetPath(mat));
-            //    matPath = matPath.Replace(fbxPath, outPath);
-            //    if (!Directory.Exists(matPath))
-            //        Directory.CreateDirectory(matPath);
-            //    AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(mat), string.Format("{0}/{1}", matPath, Path.GetFileName(AssetDatabase.GetAssetPath(mat))));
+            List<Material> materials = EditorHelpers.CollectAll<Material>(curFbxPath + "/Materials");
+            foreach (Material mat in materials)
+            {
+                string matPath = Path.GetDirectoryName(AssetDatabase.GetAssetPath(mat));
+                matPath = matPath.Replace(fbxPath, outPath);
+                if (!Directory.Exists(matPath))
+                    Directory.CreateDirectory(matPath);
+                AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(mat), string.Format("{0}/{1}", matPath, Path.GetFileName(AssetDatabase.GetAssetPath(mat))));
 
 
-            //    Material m = AssetDatabase.LoadAssetAtPath(string.Format("{0}/{1}", matPath, Path.GetFileName(AssetDatabase.GetAssetPath(mat))), typeof(Material)) as Material;
-            //    m.shader = Shader.Find("Legacy Shaders/Self-Illumin/Diffuse");
-            //}
+                Material m = AssetDatabase.LoadAssetAtPath(string.Format("{0}/{1}", matPath, Path.GetFileName(AssetDatabase.GetAssetPath(mat))), typeof(Material)) as Material;
+                //m.shader = Shader.Find("Legacy Shaders/Self-Illumin/Diffuse");
+            }
 
             AssetDatabase.Refresh();
             AssetDatabase.SaveAssets();
