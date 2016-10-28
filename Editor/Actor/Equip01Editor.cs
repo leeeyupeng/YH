@@ -98,8 +98,8 @@ public class Equip01Editor
 
     public static void GenEquip(string modelPath, AnimatorController animatorController)
     {
-        //string prefabPath = modelPath.Replace(m_fbxPath, m_prefabPath);
-        string prefabPath = string.Format("{0}/{1}", m_prefabPath, Path.GetFileName(modelPath));
+        string prefabPath = modelPath.Replace(m_fbxPath, m_prefabPath);
+        //string prefabPath = string.Format("{0}/{1}", m_prefabPath, Path.GetFileName(modelPath));
         prefabPath = prefabPath.Replace(".fbx", ".prefab");
         prefabPath = prefabPath.Replace(".FBX", ".prefab");
         string folder = prefabPath.Substring(0, prefabPath.LastIndexOf("/"));
