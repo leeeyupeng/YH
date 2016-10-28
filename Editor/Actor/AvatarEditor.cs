@@ -33,6 +33,8 @@ public class AvatarEditor{
         foreach(FileInfo fi in di.GetFiles())
         {
             string path = fi.FullName;
+            if (fi.FullName.Contains("@"))
+                continue;
             path = path.Replace("\\", "/");
             path = path.Replace(Application.dataPath,"Assets");
             Object obj = AssetDatabase.LoadAssetAtPath(path,typeof(GameObject));

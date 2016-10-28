@@ -1,5 +1,5 @@
 ﻿
-Shader "KOL/Charactor Scale Normal Mobile"
+Shader "KOL/Charactor Scale Normal Outline Mobile"
 {
 	Properties
 	{
@@ -32,8 +32,8 @@ Shader "KOL/Charactor Scale Normal Mobile"
 		
 		
 		//OUTLINE
-		//_OutlineColor ("#OUTLINE# Outline Color", Color) = (0.2, 0.2, 0.2, 1.0)
-		//_Outline ("#OUTLINE# Outline Width", Float) = 1
+		_OutlineColor ("#OUTLINE# Outline Color", Color) = (0.2, 0.2, 0.2, 1.0)
+		_Outline ("#OUTLINE# Outline Width", Float) = 1
 		
 		//Outline Textured
 		_TexLod ("#OUTLINETEX# Texture LOD", Range(0,10)) = 5
@@ -180,7 +180,7 @@ Shader "KOL/Charactor Scale Normal Mobile"
 		ENDCG
 		
 		//Outlines
-		//UsePass "Hidden/Toony Colors Pro 2/Outline Only Scale Normal (Shader Model 2)/OUTLINE"
+		UsePass "Hidden/Toony Colors Pro 2/Outline Only Scale Normal (Shader Model 2)/OUTLINE"
 	}
 	
 	Fallback "Diffuse"

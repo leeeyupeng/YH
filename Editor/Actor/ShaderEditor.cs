@@ -54,5 +54,10 @@ public class ShaderEditor : MonoBehaviour
         {
             mat.shader = Shader.Find("KOL/Charactor Scale Normal Mobile");
         }
+
+        if (mat.shader.name == "KOL/Charactor Scale Normal Outline")
+        {
+            mat.shader = Shader.Find("KOL/Charactor Scale Normal Outline Mobile");
+        }
     }
 }

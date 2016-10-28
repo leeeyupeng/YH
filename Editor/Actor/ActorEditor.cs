@@ -27,7 +27,7 @@ public class ActorEditor
 
         HumanEditor.GenPrefab();
 
-        EquipEditor.SplitAll();
+        Equip01Editor.GenEquipAll();
 
         WeaponEditor.SplitAll();
 
