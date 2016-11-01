@@ -19,8 +19,8 @@ using System.Collections.Generic;
 
 public class AnimatorEditor : Editor
 {
-    static string m_fbxPath = "Arts\\Charactor\\Human";
-    static string m_animatorPath = "Project\\Arts\\Charactor\\Human";
+    static string m_fbxPath = "Arts/Charactor/Human";
+    static string m_animatorPath = "Project/Arts/Charactor/Human";
     [MenuItem("KOL/Actor/Human/Mecanim/Gen")]
     public static void GenController()
     {
