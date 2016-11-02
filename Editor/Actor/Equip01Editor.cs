@@ -42,7 +42,7 @@ public class Equip01Editor
                         continue;
                     string assetPath = dirModel.FullName.Replace("\\", "/");
                     assetPath = assetPath.Replace(Application.dataPath, "Assets");
-                    GenEquipForAnimator(assetPath, animatorController);
+                    GenEquipForAnimator(assetPath, animatorController,path);
                 }
             }
         }
@@ -73,13 +73,13 @@ public class Equip01Editor
                         continue;
                     string assetPath = dirChild.FullName.Replace("\\","/");
                     assetPath = assetPath.Replace(Application.dataPath,"Assets");
-                    GenEquipForAnimator(assetPath, animatorController);
+                    GenEquipForAnimator(assetPath, animatorController,path);
                 }
             }
         }
     }
 
-    public static void GenEquipForAnimator(string path, AnimatorController animatorController)
+    public static void GenEquipForAnimator(string path, AnimatorController animatorController,string animatorPath)
     {
         string[] guids = AssetDatabase.FindAssets("t:GameObject", new string[] { path });
         string modelPath = null;
@@ -92,14 +92,14 @@ public class Equip01Editor
                 modelPath = assetPath;
             }
 
-            GenEquip(modelPath, animatorController);
+            GenEquip(modelPath, animatorController, animatorPath);
         }
     }
 
-    public static void GenEquip(string modelPath, AnimatorController animatorController)
+    public static void GenEquip(string modelPath, AnimatorController animatorController,string animatorPath)
     {
-        string prefabPath = modelPath.Replace(m_fbxPath, m_prefabPath);
-        //string prefabPath = string.Format("{0}/{1}", m_prefabPath, Path.GetFileName(modelPath));
+        //string prefabPath = modelPath.Replace(m_fbxPath, m_prefabPath);
+        string prefabPath = string.Format("{0}/{1}", animatorPath.Replace(m_fbxPath,m_prefabPath), Path.GetFileName(modelPath));
         prefabPath = prefabPath.Replace(".fbx", ".prefab");
         prefabPath = prefabPath.Replace(".FBX", ".prefab");
         string folder = prefabPath.Substring(0, prefabPath.LastIndexOf("/"));
@@ -112,6 +112,13 @@ public class Equip01Editor
         GameObject prefabInstantiate = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
         Animator animator = prefabInstantiate.GetComponent<Animator>();
         animator.runtimeAnimatorController = animatorController;
+        for (int i = 0; i < prefabInstantiate.transform.childCount; i++)
+        {
+            GameObject anchorBone = prefabInstantiate.transform.GetChild(i).gameObject;
+            anchorBone.transform.localPosition = Vector3.zero;
+            anchorBone.transform.localRotation = Quaternion.identity;
+            anchorBone.transform.localScale = Vector3.one;
+        }
 
         PrefabUtility.ReplacePrefab(prefabInstantiate, prefab, ReplacePrefabOptions.ConnectToPrefab);
         //PrefabUtility.a

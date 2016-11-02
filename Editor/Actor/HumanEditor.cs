@@ -69,6 +69,9 @@ public class HumanEditor
         Animator animator = prefabInstantiate.GetComponent<Animator>();
         animator.runtimeAnimatorController = AssetDatabase.LoadAssetAtPath(m_animatorPath, typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
         prefabInstantiate.AddComponent<AvatarBehaviour>();
+        AnimatorBehaviour ab = prefabInstantiate.AddComponent<AnimatorBehaviour>();
+        ab.m_animator = prefabInstantiate.GetComponent<Animator>();
+
         //CapsuleCollider sc = prefabInstantiate.AddComponent<CapsuleCollider>();
         //sc.center = new Vector3(0f, 0.5f, 0f);
         //sc.radius = 0.5f;
