@@ -83,6 +83,8 @@ public class MonsterEditor
             prefabInstantiate.layer = LayerMask.NameToLayer("Monster");
             Animator animator = prefabInstantiate.GetComponent<Animator>();
             animator.runtimeAnimatorController = GenController(monsterPath);
+            AnimatorBehaviour ab = prefabInstantiate.AddComponent<AnimatorBehaviour>();
+            ab.m_animator = animator;
             CapsuleCollider cc = prefabInstantiate.AddComponent<CapsuleCollider>();
             cc.center = new Vector3(0f, 0.5f, 0f);
             cc.radius = 0.5f;
