@@ -47,6 +47,7 @@ public class AnimatorEditor : Editor
             }
         }
 
+        fbxPathBones = fbxPathBones.Replace("\\","/");
         string animatorPath = fbxPathBones.Replace(m_fbxPath, m_animatorPath);
         animatorPath = string.Format("{0}\\{1}.controller", Path.GetDirectoryName(animatorPath), Path.GetFileNameWithoutExtension(animatorPath));
         animatorPath = animatorPath.Replace("\\","/");
