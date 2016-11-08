@@ -72,12 +72,6 @@ public class AvatarEditor{
         {
             //mesh
             GameObject objInstantiate = PrefabUtility.InstantiatePrefab(render.gameObject) as GameObject;
-            if (objInstantiate.transform.parent != null)
-            {
-                GameObject objRoot = objInstantiate.transform.parent.root.gameObject;
-                objInstantiate.transform.parent = null;
-                GameObject.DestroyImmediate(objRoot);
-            }
 
             Renderer renderInstantiate = objInstantiate.GetComponent<Renderer>();
 
@@ -92,7 +86,14 @@ public class AvatarEditor{
 
             PrefabUtility.CreatePrefab(string.Format("{0}/{1}_{2}.prefab",prefabPath,fbxName,render.name), renderInstantiate.gameObject);
 
-            GameObject.DestroyImmediate(objInstantiate);
+            //if (objInstantiate.transform.parent != null)
+            //{
+            //    GameObject objRoot = objInstantiate.transform.parent.root.gameObject;
+            //    objInstantiate.transform.parent = null;
+            //    GameObject.DestroyImmediate(objRoot);
+            //}
+
+            GameObject.DestroyImmediate(objInstantiate.transform.root.gameObject);
 
             //Bone
             if (renderInstantiate is SkinnedMeshRenderer)
@@ -100,7 +101,16 @@ public class AvatarEditor{
                 SkinnedMeshRenderer smr = (SkinnedMeshRenderer)render;
                 List<string> boneNames = new List<string>();
                 foreach (Transform t in smr.bones)
-                    boneNames.Add(t.name);
+                {
+                    string bonePath = t.name;
+                    Transform tempT = t;
+                    while(tempT.parent != fbx.transform)
+                    {
+                        bonePath = string.Format("{0}/{1}", tempT.parent.name, bonePath);
+                        tempT = tempT.parent;
+                    }
+                    boneNames.Add(bonePath);
+                }
                 string bonesPath = string.Format("{0}/bones", prefabPath);
 
                 if (!Directory.Exists(bonesPath))
@@ -118,7 +128,18 @@ public class AvatarEditor{
                 List<string> boneNames = new List<string>();
                 //foreach (Transform t in smr.bones)
                 //    boneNames.Add(t.name);
-                boneNames.Add(render.transform.parent.name);
+                //boneNames.Add(render.transform.parent.name);
+
+                Transform t = render.transform.parent;
+                string bonePath = t.name;
+                Transform tempT = t;
+                while (tempT.parent != fbx.transform)
+                {
+                    bonePath = string.Format("{0}/{1}", tempT.parent.name, bonePath);
+                    tempT = tempT.parent;
+                }
+                boneNames.Add(bonePath);
+
                 string bonesPath = string.Format("{0}/bones", prefabPath);
 
                 if (!Directory.Exists(bonesPath))

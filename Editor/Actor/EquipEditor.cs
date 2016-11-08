@@ -100,7 +100,16 @@ public class EquipEditor
                 SkinnedMeshRenderer smr = (SkinnedMeshRenderer)render;
                 List<string> boneNames = new List<string>();
                 foreach (Transform t in smr.bones)
-                    boneNames.Add(t.name);
+                {
+                    //boneNames.Add(t.name);
+                    string bonePath = t.name;
+                    Transform tempT = t;
+                    while (tempT.parent != fbx.transform)
+                    {
+                        bonePath = string.Format("{0}/{1}", tempT.parent.name, bonePath);
+                        tempT = tempT.parent;
+                    }
+                }
                 string bonesPath = string.Format("{0}/bones", prefabPath);
 
                 if (!Directory.Exists(bonesPath))
@@ -118,7 +127,16 @@ public class EquipEditor
                 List<string> boneNames = new List<string>();
                 //foreach (Transform t in smr.bones)
                 //    boneNames.Add(t.name);
-                boneNames.Add(render.transform.parent.name);
+                //boneNames.Add(render.transform.parent.name);
+                Transform t = render.transform.parent;
+                string bonePath = t.name;
+                Transform tempT = t;
+                while (tempT.parent != fbx.transform)
+                {
+                    bonePath = string.Format("{0}/{1}", tempT.parent.name, bonePath);
+                    tempT = tempT.parent;
+                }
+                boneNames.Add(bonePath);
                 string bonesPath = string.Format("{0}/bones", prefabPath);
 
                 if (!Directory.Exists(bonesPath))
