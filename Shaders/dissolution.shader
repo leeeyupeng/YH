@@ -1,52 +1,95 @@
-Shader "Esfog/Dissolve"
-{
+//溶解
+Shader "KOL/Dissolve" {
 	Properties
 	{
-		_MainTex("Base (RGB)", 2D) = "white" {}
-	_NoiseTex("NoiseTex (R)",2D) = "white"{}
-	_DissolveSpeed("DissolveSpeed (Second)",Float) = 1
-		_EdgeWidth("EdgeWidth",Range(0,0.5)) = 0.1
-		_EdgeColor("EdgeColor",Color) = (1,1,1,1)
+		_MainTex("Base", 2D) = "white" {}
+	_DissolorTex("DissolorTex (RGB)", 2D) = "white" {}
+	_RAmount("RAmount", Range(0, 1)) = 0.5
+
+		_DissolorWith("DissolorWith", float) = 0.1//溶解过度宽度
+		_DissColor("DissColor", Color) = (1,1,1,1)//溶解颜色
+		_Illuminate("Illuminate", Range(0, 4)) = 1
 	}
 		SubShader
 	{
-		Tags{ "RenderType" = "Opaque" }
-
+		Tags{ "RenderType" = "Transparent" "Queue" = "Transparent" }
+		LOD 200
 		Pass
 	{
+		Blend SrcAlpha OneMinusSrcAlpha
 		CGPROGRAM
-#pragma vertex vert_img  
-#pragma fragment frag  
-#include "UnityCG.cginc"  
+#include "UnityCG.cginc"
 
-		uniform sampler2D _MainTex;
-	uniform sampler2D _NoiseTex;
-	uniform float _DissolveSpeed;
-	uniform float _EdgeWidth;
-	uniform float4 _EdgeColor;
+		struct appdata
+	{
+		float4 vertex : POSITION;
+		float2 texcoord : TEXCOORD0;
+		float2 texcoord1 : TEXCOORD1;
+	};
+	struct v2f
+	{
+		float4 pos : POSITION;
+		half2 texcoord : TEXCOORD0;
+		half2 texcoord1 : TEXCOORD1;
+	};
 
-	float4 frag(v2f_img i) :COLOR
+	sampler2D _MainTex;
+	float4 _MainTex_ST;
+	sampler2D _DissolorTex;
+	float4 _DissolorTex_ST;
+	half _RAmount;
+
+	half _DissolorWith;
+	half4 _DissColor;
+	half _Illuminate;
+
+	v2f vert(appdata v)
 	{
-		float DissolveFactor = saturate(_Time.y / _DissolveSpeed);
-	float noiseValue = tex2D(_NoiseTex,i.uv).r;
-	if (noiseValue <= DissolveFactor)
-	{
-		discard;
+		v2f o;
+		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+		o.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
+		o.texcoord1 = TRANSFORM_TEX(v.texcoord1, _DissolorTex);
+		return o;
 	}
 
-	float4 texColor = tex2D(_MainTex,i.uv);
-	//noiseValue - DissolveFactor，这个值表示溶解贴图上的R通道值和目前的溶解基准值相差多少  
-	//EdgeFactor越小表示离溶解时间越近,也就是说它边缘化的颜色成分越重  
 
-	float EdgeFactor = saturate((noiseValue - DissolveFactor) / (_EdgeWidth*DissolveFactor));
-	float4 BlendColor = texColor * _EdgeColor;
+	half4 frag(v2f i) :COLOR
+	{
+		half4 mainCol = tex2D(_MainTex,i.texcoord);
+		half4 DissolorTexCol = tex2D(_DissolorTex,i.texcoord1);
 
-	return lerp(texColor,BlendColor,1 - EdgeFactor);
+		half4 col = mainCol;
+		half clipVauleR = DissolorTexCol.r - _RAmount;
+		if (clipVauleR <= 0)
+		{
+			if (clipVauleR > -_DissolorWith)
+			{
+				if (_RAmount != 1)
+				{
+					//插值颜色过度
+					float t = clipVauleR / -_DissolorWith;
+					col = lerp(mainCol, _DissColor, t);
+				}
+				else
+				{
+					discard;
+				}
+			}
+			else
+			{
+				discard;
+			}
+
+		}
+
+		return col;
 	}
+#pragma vertex vert
+#pragma fragment frag
 
 		ENDCG
 	}
+
 	}
 
-		FallBack Off
 }

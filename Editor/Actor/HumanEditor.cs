@@ -36,7 +36,9 @@ public class HumanEditor
         //sc.direction = 
         Rigidbody rb = prefabInstantiate.AddComponent<Rigidbody>();
         rb.useGravity = false;
-        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
+        rb.constraints |= RigidbodyConstraints.FreezePositionY;
+        //rb.constraints = RigidbodyConstraints.FreezeAll;
 
         prefabInstantiate.AddComponent<AvatarBehaviour>();
         prefabInstantiate.AddComponent<PlayerController>();

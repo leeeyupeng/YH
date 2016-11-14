@@ -90,8 +90,11 @@ public class MonsterEditor
             cc.radius = 0.5f;
             cc.height = 1f;
             Rigidbody rb = prefabInstantiate.AddComponent<Rigidbody>();
-            rb.useGravity = true;
-            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            rb.useGravity = false;
+            //rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
+            rb.constraints |= RigidbodyConstraints.FreezePositionY;
+
             MonsterController mc = prefabInstantiate.AddComponent<MonsterController>();
             mc.m_monsterName = Path.GetFileNameWithoutExtension(modelPath);
             GameObject detect = new GameObject("detect");
