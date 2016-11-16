@@ -16,7 +16,7 @@ using UnityEditor;
 
 public class toolsArt : Editor {
     [MenuItem("KOL/gen all Arts")]
-    public static void GenAllArts()
+    public static void AutoGenArts()
     {
 
         ActorEditor.AutoGen();
