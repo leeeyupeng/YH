@@ -21,6 +21,6 @@ public class toolsArt : Editor {
 
         ActorEditor.AutoGen();
 
-
+        FXPrefabCopyArts2Resources.CopyArts2Res();
     }
 }
